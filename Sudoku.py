@@ -1,3 +1,5 @@
+import math
+
 class Sudoku:
 
     def __init__(self):
@@ -42,7 +44,7 @@ class Sudoku:
 
     ]
 
-    #methods
+    #game rules
 
     def areDistinct(self, array):
         n = len(array)
@@ -54,45 +56,33 @@ class Sudoku:
         return(len(s) == len(array))
 
 
-    def checkRows(self, board):
-        row = []
-        for i in range(0, 81, 9):
-            for j in range(0, 9):
-                row.append(board[i + j])
-
-                if not self.areDistinct(row):
-                    return False
-
-            row.clear()
-
+    def distinctInRow(self, board, num, position):
+        start = 9 * math.floor(position/9)
+        for i in range(start, start + 9):
+            if board[i] == num:
+                return False
         return True 
 
 
-    def checkColumns(self, board):
-        column = []
-        for j in range(0, 9):
-            for i in range(0, 81, 9):
-                column.append(board[i + j])
-
-                if not self.areDistinct(column):
-                    return False
-
-            column.clear()
-
+    def distinctInColumn(self, board, num, position):
+        for i in range(position % 9, 81, 9):
+            if board[i] == num:
+                return False
         return True
         
         
-    def checkBoxes(self, board):
-        box = []
+    def distinctInBox(self, board, num, position):
+        check = -1
 
-        for subbox in self.SubBoxes:
-            for index in subbox:
-                box.append(board[index])
+        for i in range(0,9):
+            for j in self.SubBoxes[i]:
+                if j == position:
+                    check = i
+                    break
 
-            if not self.areDistinct(box):
+        for k in self.SubBoxes[check]:
+            if board[k] == num:
                 return False
-
-            box.clear()
 
         return True
 
