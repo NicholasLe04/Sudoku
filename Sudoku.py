@@ -1,94 +1,53 @@
-import math
+import sys
+import pygame as pg
 
-class Sudoku:
+pg.init()
 
-    def __init__(self):
+font = pg.font.Font('Leaner-Thin.ttf', 60)
 
-        self.SubBoxes = [
+Board = [
 
-        [0,  1,  2,
-        9,  10, 11, 
-        18, 19, 20],
+    0,8,0,7,0,4,6,0,0,
+    1,0,0,0,0,0,0,0,8,
+    2,0,0,0,0,0,0,0,0,
+    7,0,0,0,1,0,4,0,0,
+    0,0,9,0,0,0,0,0,3,
+    6,1,0,0,0,2,9,0,0,
+    0,5,0,0,0,0,0,0,0,
+    0,6,0,5,0,0,1,0,4,
+    0,0,0,4,9,0,7,0,0
 
-        [27, 28, 29,
-        36, 37, 38,
-        45, 46, 47],
+]
 
-        [54, 55, 56,
-        63, 64, 65,
-        72, 73, 74],
+class SudokuBoard:
+    def __init__(self, boardWidth, boardHeight, navBarHeight):
+        self.boardWidth = boardWidth
+        self.boardHeight = boardHeight
+        self.navBarHeight = navBarHeight
 
-        [3,  4,  5,
-        12, 13, 14,
-        21, 22, 23],
+        screen = pg.display.set_mode((boardWidth, boardHeight + navBarHeight))
 
-        [30, 31, 32,
-        39, 40, 41,
-        48, 49, 50],
-        
-        [57, 58, 59,
-        66, 67, 68,
-        75, 76, 77],
-
-        [6,  7,  8,
-        15, 16, 17,
-        24, 25, 26],
-
-        [33, 34, 35,
-        42, 43, 44,
-        51, 52, 53],
-
-        [60, 61, 62,
-        69, 70, 71,
-        78, 79, 80],
-
-    ]
-
-    #game rules
-
-    def areDistinct(self, array):
-        n = len(array)
-
-        s = set()
-        for i in range(0, n):
-            s.add(array[i])
-
-        return(len(s) == len(array))
+        def draw_Board():
+            screen.fill(pg.Color(255,255,255))
+            pg.draw.rect(screen, pg.Color(0,0,0), pg.Rect(10, 10 + navBarHeight, 730, 730), 10)
+            for i in range(80,720,80):
+                pg.draw.line(screen, pg.Color(0,0,0), pg.Vector2(i + 15, 15 + navBarHeight), pg.Vector2(i + 15, 730 + navBarHeight), 5)
+                pg.draw.line(screen, pg.Color(0,0,0), pg.Vector2(15, i + 15 + navBarHeight), pg.Vector2(730, i + 15 + navBarHeight), 5)
 
 
-    def distinctInRow(self, board, num, position):
-        start = 9 * math.floor(position/9)
-        for i in range(start, start + 9):
-            if board[i] == num:
-                return False
-        return True 
+        def draw_numbers():
+            for i in range(0,81,9):
+                for j in range(0, 9):
+                    output = Board[i + j]
+                    if output != 0:
+                        text = font.render(str(output), True, pg.Color(0,0,0))
+                        screen.blit(text, pg.Vector2(((j * 80) + 40, (i/9 * 80) + navBarHeight + 20)))
 
 
-    def distinctInColumn(self, board, num, position):
-        for i in range(position % 9, 81, 9):
-            if board[i] == num:
-                return False
-        return True
-        
-        
-    def distinctInBox(self, board, num, position):
-        check = -1
 
-        for i in range(0,9):
-            for j in self.SubBoxes[i]:
-                if j == position:
-                    check = i
-                    break
-
-        for k in self.SubBoxes[check]:
-            if board[k] == num:
-                return False
-
-        return True
+        draw_Board()
+        draw_numbers()
+        pg.display.flip()
 
 
-    def checkBoard(self, board):
-        if self.checkRows(board) and self.checkColumns(board) and self.checkBoxes(board):
-            return True
 
-        return False
