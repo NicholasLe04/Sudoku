@@ -1,6 +1,4 @@
 import math
-import pygame
-import time
 
 SubBoxes = [
  
