@@ -4,12 +4,11 @@ import Solver
 
 pg.init()
 
-#font = pg.font.Font('.\Assets\Leaner-Thin.ttf', 60)
 font = pg.font.SysFont('verdana', 60)
 
 
 class SudokuBoard:
-    def __init__(self, boardWidth, boardHeight, navBarHeight):
+    def __init__(self, boardWidth, boardHeight, navBarHeight):              #Constructor
         self.Board = [
 
             0,0,0,0,0,0,0,0,0,
